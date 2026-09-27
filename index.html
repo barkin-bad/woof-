@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>woof!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            border-radius: 0;
+            cursor: none;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            background-color: #000000;
+            color: #D1C0A6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .grain {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.03;
+            overflow: hidden;
+        }
+
+        .grain svg {
+            position: absolute;
+            top: -20%;
+            left: -20%;
+            width: 140%;
+            height: 140%;
+            display: block;
+            animation: grainShift 0.8s steps(1, end) infinite;
+        }
+
+        @keyframes grainShift {
+            0%   { transform: translate3d(0, 0, 0); }
+            20%  { transform: translate3d(-2%, 1%, 0); }
+            40%  { transform: translate3d(1%, -2%, 0); }
+            60%  { transform: translate3d(-1%, 2%, 0); }
+            80%  { transform: translate3d(2%, -1%, 0); }
+            100% { transform: translate3d(0, 0, 0); }
+        }
+
+        .cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #FFFFFF;
+            border: 1px solid rgba(255, 255, 255, 0);
+            pointer-events: none;
+            z-index: 10000;
+            opacity: 0;
+            will-change: transform;
+            transition: width 0.25s ease, height 0.25s ease,
+                        background 0.25s ease, border-color 0.25s ease,
+                        opacity 0.3s ease;
+        }
+
+        .cursor.visible {
+            opacity: 1;
+        }
+
+        .cursor.hover {
+            width: 26px;
+            height: 26px;
+            background: transparent;
+            border-color: #FFFFFF;
+        }
+
+        @media (hover: none), (pointer: coarse) {
+            * { cursor: auto; }
+            .cursor { display: none; }
+        }
+
+        .intro {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: none;
+            overflow: hidden;
+        }
+
+        .intro-panel {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 50.5%;
+            background: #000000;
+            transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .intro-top {
+            top: 0;
+        }
+
+        .intro-bottom {
+            bottom: 0;
+        }
+
+        .intro.open .intro-top {
+            transform: translateY(-101%);
+        }
+
+        .intro.open .intro-bottom {
+            transform: translateY(101%);
+        }
+
+        .intro-star {
+            position: relative;
+            z-index: 2;
+            width: 150px;
+            height: 150px;
+            transition: opacity 0.6s ease, transform 1s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .intro-star svg {
+            width: 100%;
+            height: 100%;
+            fill: #FFFFFF;
+            animation: starPulse 2.6s ease-in-out infinite;
+            filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.9)) drop-shadow(0 0 22px rgba(255, 255, 255, 0.55));
+        }
+
+        .intro.open .intro-star {
+            opacity: 0;
+            transform: scale(1.7);
+        }
+
+        .intro.open .intro-star svg {
+            animation-play-state: paused;
+        }
+
+        @keyframes starPulse {
+            0%, 100% { transform: scale(1); opacity: 0.88; }
+            50% { transform: scale(1.12); opacity: 1; }
+        }
+
+        .sidebar {
+            width: 320px;
+            height: 100%;
+            padding: 40px 30px;
+            border-right: 1px solid #4A1F1F;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .sidebar,
+        .content {
+            opacity: 0;
+            transition: opacity 1s ease 0.35s, transform 1s ease 0.35s;
+        }
+
+        .sidebar {
+            transform: translateY(-16px);
+        }
+
+        .content {
+            transform: translateY(16px);
+        }
+
+        body.revealed .sidebar,
+        body.revealed .content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .profile-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .glow {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(184, 29, 35, 0.55) 0%, rgba(184, 29, 35, 0.22) 45%, rgba(184, 29, 35, 0) 72%);
+            filter: blur(14px);
+            animation: glowPulse 4.5s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.55; transform: scale(0.92); }
+            50% { opacity: 1; transform: scale(1.08); }
+        }
+
+        .halo {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            fill: #B81D23;
+            animation: spin 15s linear infinite;
+            filter: drop-shadow(0 0 6px rgba(184, 29, 35, 0.85)) drop-shadow(0 0 18px rgba(184, 29, 35, 0.5));
+            z-index: 1;
+        }
+
+        .avatar {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            z-index: 2;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .navigation {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .navigation a {
+            color: #D1C0A6;
+            text-decoration: none;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 12px;
+            background-color: #140808;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .navigation a:hover, .navigation a.active {
+            background-color: #1F0C0C;
+            color: #B81D23;
+            border: 1px solid #B81D23;
+            box-shadow: 0 0 10px rgba(184, 29, 35, 0.55), 0 0 22px rgba(184, 29, 35, 0.3), inset 0 0 12px rgba(184, 29, 35, 0.15);
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 60px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .section-content {
+            display: none;
+        }
+
+        .section-content.active {
+            display: block;
+            animation: channelSwitch 0.3s ease-out both;
+        }
+
+        @keyframes channelSwitch {
+            0% {
+                opacity: 0;
+                transform: translate3d(-10px, 0, 0);
+                text-shadow: 4px 0 rgba(0, 229, 255, 0.75), -4px 0 rgba(184, 29, 35, 0.9);
+                filter: blur(1.2px);
+            }
+            15% {
+                opacity: 1;
+                transform: translate3d(7px, -1px, 0);
+                text-shadow: -5px 0 rgba(0, 229, 255, 0.7), 5px 0 rgba(184, 29, 35, 0.85);
+            }
+            30% {
+                opacity: 0.85;
+                transform: translate3d(-5px, 1px, 0) skewX(-3deg);
+                text-shadow: 3px 0 rgba(0, 229, 255, 0.55), -3px 0 rgba(184, 29, 35, 0.7);
+            }
+            45% {
+                opacity: 1;
+                transform: translate3d(4px, 0, 0);
+                text-shadow: -2px 0 rgba(0, 229, 255, 0.45), 2px 0 rgba(184, 29, 35, 0.55);
+                filter: blur(0.4px);
+            }
+            60% {
+                transform: translate3d(-2px, -1px, 0) skewX(1.5deg);
+                text-shadow: 2px 0 rgba(0, 229, 255, 0.3), -2px 0 rgba(184, 29, 35, 0.4);
+            }
+            75% {
+                opacity: 0.92;
+                transform: translate3d(1px, 0, 0);
+                text-shadow: -1px 0 rgba(0, 229, 255, 0.2), 1px 0 rgba(184, 29, 35, 0.25);
+                filter: blur(0);
+            }
+            100% {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+                text-shadow: none;
+                filter: blur(0);
+            }
+        }
+
+        .content h1 {
+            color: #B81D23;
+            font-size: 36px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .content p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            max-width: 800px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="intro" id="intro">
+        <div class="intro-panel intro-top"></div>
+        <div class="intro-panel intro-bottom"></div>
+        <div class="intro-star">
+            <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="50,0 58,35 75,25 65,42 100,50 65,58 75,75 58,65 50,100 42,65 25,75 35,58 0,50 35,42 25,25 42,35" />
+            </svg>
+        </div>
+    </div>
+
+    <aside class="sidebar">
+        <div class="profile-container">
+            <div class="glow"></div>
+            <svg class="halo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <polygon points="50,0 58,35 75,25 65,42 100,50 65,58 75,75 58,65 50,100 42,65 25,75 35,58 0,50 35,42 25,25 42,35" />
+            </svg>
+            <img class="avatar" src="https://i.pinimg.com/736x/7f/fc/24/7ffc242593da4f726f45c62f782f58aa.jpg" alt="Аватар">
+        </div>
+
+        <nav class="navigation">
+            <a onclick="showSection('about', this)" class="active">Обо мне</a>
+            <a onclick="showSection('skills', this)">Умею</a>
+            <a onclick="showSection('dream', this)">Моя маленькая мечта</a>
+            <a onclick="showSection('contacts', this)">Контакты</a>
+        </nav>
+    </aside>
+
+    <main class="content">
+
+        <div id="about" class="section-content active">
+            <h1>Тут живёт Барк.</h1>
+            <p><i>"Всё потихоньку!"</i></p>
+            <p>Я увлекаюсь программированием. Перевожу всякое с английского и японского. И иногда всякое пишу и делаю. Да, это расплывчато, но это самое точное описание того, что я делаю.</p>
+        </div>
+
+        <div id="skills" class="section-content">
+            <h1>Умею</h1>
+            <p>В то время, пока не играю - перевожу. В основном, комиксы, мангу и ранобэ. Самостоятельно убираю надписи со страниц и накладываю их.</p>
+            <p>Пока только учусь программированию, но вроде пока всё неплохо. Вы же читаете это сейчас.</p>
+            <p>Увлекаюсь созданию украшений из УФ-смолы и бижутерией.</p>
+            <p>Сейчас пробую себя в рисовании и пытаюсь сделать свою модель.</p>
+        </div>
+
+        <div id="dream" class="section-content">
+            <h1>Моя маленькая мечта</h1>
+            <p><i>"Я обязательно смогу. Наверное."</i></p>
+            <p>Буду честна с тем, что я далеко не дизайнер, только учусь кодингу и ищу то, что меня интересует, но тем не менее, Я бы хотела однажды помочь кому-то в создании ARG или сайта для VHS-хоррора, чтобы кто-то что-то искал или разгадывал. Мне нравится создавать эстетику чего-то загадочного, но без лишней жести.</p>
+            <p>И пусть моя первая попытка будет... Здесь.</p>
+        </div>
+
+        <div id="contacts" class="section-content">
+            <h1>Контакты</h1>
+            <p>Если Вас заинтересовало что-то из этого, то жду Вас.</p>
+            <p>Связаться со мной можно по почте: <strong>tomura.maddog@gmail.com</strong> или <strong>barkin.bad@mail.ru</strong></p>
+            <p>Или в социальных сетях (ссылки можно добавить сюда).</p>
+        </div>
+
+    </main>
+
+    <div class="grain" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg">
+            <filter id="grainNoise">
+                <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch" />
+                <feColorMatrix type="saturate" values="0" />
+            </filter>
+            <rect width="100%" height="100%" filter="url(#grainNoise)" />
+        </svg>
+    </div>
+
+    <div class="cursor" id="cursor"></div>
+
+    <script>
+        const intro = document.getElementById('intro');
+
+        intro.addEventListener('click', () => {
+            if (intro.classList.contains('open')) return;
+            intro.classList.add('open');
+            document.body.classList.add('revealed');
+            setTimeout(() => {
+                intro.style.display = 'none';
+            }, 1300);
+        });
+
+        const cursor = document.getElementById('cursor');
+        const HOVER_TARGETS = 'a, button, .intro';
+        let cursorVisible = false;
+
+        window.addEventListener('mousemove', (e) => {
+            cursor.style.transform =
+                `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`;
+            if (!cursorVisible) {
+                cursorVisible = true;
+                cursor.classList.add('visible');
+            }
+        });
+
+        document.addEventListener('mouseleave', () => {
+            cursorVisible = false;
+            cursor.classList.remove('visible');
+        });
+
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.closest(HOVER_TARGETS)) cursor.classList.add('hover');
+        });
+
+        document.addEventListener('mouseout', (e) => {
+            if (e.target.closest(HOVER_TARGETS)) cursor.classList.remove('hover');
+        });
+
+        function showSection(sectionId, clickedLink) {
+            const sections = document.querySelectorAll('.section-content');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            const activeSection = document.getElementById(sectionId);
+            if (activeSection) {
+                void activeSection.offsetWidth;
+                activeSection.classList.add('active');
+            }
+
+            const navLinks = document.querySelectorAll('.navigation a');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+            });
+
+            clickedLink.classList.add('active');
+        }
+    </script>
+
+</body>
+</html>
