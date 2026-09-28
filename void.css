@@ -34,6 +34,8 @@ body {
     padding: 80px 0 120px;
 }
 
+/* ---------- курсор ---------- */
+
 .void-cursor {
     position: fixed;
     top: 0;
@@ -47,8 +49,8 @@ body {
     pointer-events: none;
     z-index: 10000;
     opacity: 0;
-    will-change: transform;
-    transition: opacity 0.3s ease, width 0.2s ease, height 0.2s ease;
+    will-change: transform, width, height, opacity;
+    transition: opacity 0.6s ease, width 0.6s ease, height 0.6s ease, filter 0.6s ease;
     filter: drop-shadow(0 0 4px rgba(184, 29, 35, 0.85));
 }
 
@@ -62,10 +64,65 @@ body {
     height: 16px;
 }
 
+.void-cursor.sleeping {
+    width: 5px;
+    height: 5px;
+    opacity: 0.28;
+    filter: drop-shadow(0 0 2px rgba(184, 29, 35, 0.35));
+}
+
 @media (hover: none), (pointer: coarse) {
     * { cursor: auto; }
     .void-cursor { display: none; }
 }
+
+/* ---------- звук ---------- */
+
+.sound-btn {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    width: 34px;
+    height: 34px;
+    background: rgba(30, 30, 30, 0.7);
+    border: 1px solid #4A1F1F;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    animation: soundPulse 3s ease-in-out infinite;
+}
+
+.sound-btn:hover {
+    border-color: #B81D23;
+    box-shadow: 0 0 10px rgba(184, 29, 35, 0.55);
+}
+
+.sound-dot {
+    width: 8px;
+    height: 8px;
+    background: #4A1F1F;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sound-btn.on .sound-dot {
+    background: #B81D23;
+    box-shadow: 0 0 8px rgba(184, 29, 35, 0.9), 0 0 18px rgba(184, 29, 35, 0.5);
+    animation: soundDot 1.4s ease-in-out infinite;
+}
+
+@keyframes soundPulse {
+    0%, 100% { opacity: 0.85; }
+    50% { opacity: 1; }
+}
+
+@keyframes soundDot {
+    0%, 100% { opacity: 0.7; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1.15); }
+}
+
+/* ---------- статья ---------- */
 
 .void-article {
     max-width: 760px;
@@ -100,10 +157,43 @@ body {
     margin-bottom: 22px;
 }
 
+.void-article p .main-text {
+    color: #B81D23;
+}
+
+.void-article p.typing::after {
+    content: "▌";
+    display: inline-block;
+    margin-left: 2px;
+    color: #B81D23;
+    animation: caretBlink 0.9s steps(1) infinite;
+    text-shadow: 0 0 6px rgba(184, 29, 35, 0.9);
+}
+
+@keyframes caretBlink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+.intrusion {
+    color: #FFFFFF;
+    font-style: italic;
+    letter-spacing: 1px;
+    animation: intrusionFlicker 0.12s steps(2) infinite;
+}
+
+@keyframes intrusionFlicker {
+    0%   { opacity: 1; text-shadow: 0 0 6px rgba(255,255,255,0.8); }
+    50%  { opacity: 0.55; text-shadow: -1px 0 rgba(0, 229, 255, 0.7), 1px 0 rgba(184, 29, 35, 0.9); }
+    100% { opacity: 1; text-shadow: 0 0 6px rgba(255,255,255,0.8); }
+}
+
 @keyframes voidPulse {
     0%, 100% { opacity: 0.88; }
     50% { opacity: 1; }
 }
+
+/* ---------- картинки с «дыханием» ---------- */
 
 .void-figure {
     margin: 40px 0;
@@ -120,7 +210,18 @@ body {
     display: block;
     filter: grayscale(0.5) contrast(1.2) brightness(0.85) sepia(0.35) hue-rotate(-25deg) saturate(1.8);
     opacity: 0.9;
+    animation: breathe 9s ease-in-out infinite;
+    will-change: transform;
 }
+
+@keyframes breathe {
+    0%, 100% { transform: scale(1); }
+    50%      { transform: scale(1.045); }
+}
+
+.void-figure:nth-of-type(2) img { animation-duration: 11s; animation-delay: -2.5s; }
+.void-figure:nth-of-type(3) img { animation-duration: 8s;  animation-delay: -4s; }
+.void-figure:nth-of-type(4) img { animation-duration: 12s; animation-delay: -6s; }
 
 .void-figure-full {
     width: 100%;
@@ -172,5 +273,12 @@ body {
         width: 100%;
         height: 260px;
         margin: 28px 0;
+    }
+
+    .sound-btn {
+        top: 16px;
+        right: 16px;
+        width: 30px;
+        height: 30px;
     }
 }
