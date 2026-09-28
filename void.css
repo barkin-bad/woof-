@@ -34,6 +34,73 @@ body {
     padding: 90px 0 140px;
 }
 
+.void-vignette {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 6;
+    background: radial-gradient(ellipse at center, transparent 48%, rgba(0, 0, 0, 0.65) 100%);
+}
+
+.void-scanlines {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 7;
+    background: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 3px,
+        rgba(0, 0, 0, 0.18) 3px,
+        rgba(0, 0, 0, 0.18) 4px
+    );
+    opacity: 0.4;
+}
+
+.void-frame {
+    position: fixed;
+    inset: 22px;
+    pointer-events: none;
+    z-index: 8;
+}
+
+.void-frame-corner {
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    border: 0 solid #B81D23;
+    opacity: 0.55;
+    filter: drop-shadow(0 0 6px rgba(184, 29, 35, 0.6));
+}
+
+.void-frame-corner.tl {
+    top: 0;
+    left: 0;
+    border-top-width: 2px;
+    border-left-width: 2px;
+}
+
+.void-frame-corner.tr {
+    top: 0;
+    right: 0;
+    border-top-width: 2px;
+    border-right-width: 2px;
+}
+
+.void-frame-corner.bl {
+    bottom: 0;
+    left: 0;
+    border-bottom-width: 2px;
+    border-left-width: 2px;
+}
+
+.void-frame-corner.br {
+    bottom: 0;
+    right: 0;
+    border-bottom-width: 2px;
+    border-right-width: 2px;
+}
+
 .void-controls {
     position: fixed;
     top: 24px;
@@ -110,42 +177,43 @@ body {
     transform: translateY(-50%);
     writing-mode: vertical-rl;
     text-orientation: mixed;
-    font-family: 'Catherine', serif;
-    font-size: 16px;
-    letter-spacing: 14px;
+    font-family: 'Catherine', 'Mephisto', serif;
+    font-size: 15px;
+    letter-spacing: 12px;
     color: #B81D23;
     opacity: 0.3;
-    z-index: 2;
+    z-index: 4;
     pointer-events: none;
     user-select: none;
     white-space: nowrap;
     animation: sideFlicker 8s ease-in-out infinite;
+    text-shadow: 0 0 8px rgba(184, 29, 35, 0.7);
 }
 
 .void-side-left {
-    left: 34px;
+    left: 30px;
 }
 
 .void-side-right {
-    right: 34px;
-    letter-spacing: 12px;
-    opacity: 0.24;
-    animation-name: sideFlickerRight;
+    right: 30px;
+    letter-spacing: 14px;
+    opacity: 0.22;
     animation-delay: -4s;
+    animation-name: sideFlickerRight;
 }
 
 @keyframes sideFlicker {
     0%, 100% { opacity: 0.3; }
-    42% { opacity: 0.18; }
+    42% { opacity: 0.16; }
     55% { opacity: 0.34; }
-    71% { opacity: 0.12; }
+    71% { opacity: 0.1; }
 }
 
 @keyframes sideFlickerRight {
-    0%, 100% { opacity: 0.24; }
-    38% { opacity: 0.12; }
+    0%, 100% { opacity: 0.22; }
+    38% { opacity: 0.1; }
     58% { opacity: 0.28; }
-    76% { opacity: 0.08; }
+    76% { opacity: 0.06; }
 }
 
 @media (max-width: 1100px) {
@@ -155,17 +223,11 @@ body {
 }
 
 .void-article {
-    max-width: 760px;
+    max-width: 780px;
     margin: 0 auto;
     padding: 0 32px;
     position: relative;
-    z-index: 1;
-}
-
-.void-article::after {
-    content: "";
-    display: block;
-    clear: both;
+    z-index: 2;
 }
 
 .void-article h1 {
@@ -176,8 +238,22 @@ body {
     line-height: 1.3;
     letter-spacing: 3px;
     text-align: center;
-    margin-bottom: 56px;
+    margin-bottom: 44px;
     text-shadow: 0 0 10px rgba(184, 29, 35, 0.75), 0 0 28px rgba(184, 29, 35, 0.45);
+    animation: voidPulse 4s ease-in-out infinite;
+}
+
+.void-article h1::after {
+    content: "── ◆ ──";
+    display: block;
+    font-family: 'Catherine', serif;
+    font-size: 16px;
+    letter-spacing: 8px;
+    color: #B81D23;
+    opacity: 0.6;
+    margin-top: 20px;
+    text-align: center;
+    text-shadow: 0 0 8px rgba(184, 29, 35, 0.6);
     animation: voidPulse 4s ease-in-out infinite;
 }
 
@@ -249,12 +325,35 @@ body {
     50% { opacity: 1; }
 }
 
+.void-pair {
+    display: flex;
+    gap: 36px;
+    margin: 40px 0;
+    align-items: flex-start;
+}
+
+.void-pair-text {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.void-pair-text p {
+    margin-bottom: 0;
+}
+
+.void-pair .void-figure {
+    margin: 0;
+    flex: 0 0 260px;
+    width: 260px;
+    height: 340px;
+}
+
 .void-figure {
-    margin: 32px 0;
     overflow: hidden;
     border: 1px solid #4A1F1F;
     box-shadow: 0 0 24px rgba(184, 29, 35, 0.25);
     background-color: #0d0d0d;
+    margin: 40px 0;
 }
 
 .void-figure img {
@@ -282,56 +381,29 @@ body {
 
 .void-figure-full {
     width: 100%;
-    height: 280px;
+    height: 300px;
 }
 
-.void-figure-full img {
-    animation-duration: 11s;
-    animation-delay: -1s;
-}
-
-.void-figure-right {
-    float: right;
-    width: 170px;
-    height: 230px;
-    margin: 6px 0 18px 22px;
-}
-
-.void-figure-right img {
-    animation-duration: 9s;
-    animation-delay: -4s;
-}
-
-.void-figure-row {
-    display: flex;
-    gap: 22px;
-    margin: 36px 0;
-    justify-content: center;
-    align-items: flex-start;
-    clear: both;
-}
-
-.void-figure-row .void-figure {
-    width: 200px;
-    height: 280px;
-    margin: 0;
-    flex-shrink: 0;
-}
-
-.void-figure-row .void-figure:nth-child(1) img {
-    animation-duration: 13s;
-    animation-delay: -7s;
-}
-
-.void-figure-row .void-figure:nth-child(2) img {
-    animation-duration: 10s;
-    animation-delay: -2.5s;
+.void-figure-vert {
+    width: 100%;
+    max-width: 380px;
+    height: 520px;
+    margin: 44px auto;
 }
 
 @media (max-width: 700px) {
     body {
         padding: 70px 0 90px;
         font-size: 18px;
+    }
+
+    .void-frame {
+        inset: 12px;
+    }
+
+    .void-frame-corner {
+        width: 18px;
+        height: 18px;
     }
 
     .void-controls {
@@ -351,8 +423,14 @@ body {
 
     .void-article h1 {
         font-size: 32px;
-        margin-bottom: 36px;
+        margin-bottom: 30px;
         letter-spacing: 2px;
+    }
+
+    .void-article h1::after {
+        font-size: 14px;
+        letter-spacing: 6px;
+        margin-top: 14px;
     }
 
     .void-article p {
@@ -360,26 +438,10 @@ body {
         line-height: 1.7;
     }
 
-    .void-figure-full {
-        height: 200px;
-    }
-
-    .void-figure-right {
-        float: none;
-        width: 150px;
-        height: 200px;
-        margin: 22px auto;
-    }
-
-    .void-figure-row {
+    .void-pair {
         flex-direction: column;
-        align-items: center;
-        gap: 18px;
+        gap: 20px;
+        margin: 30px 0;
     }
 
-    .void-figure-row .void-figure {
-        width: 100%;
-        max-width: 220px;
-        height: 300px;
-    }
-}
+   
