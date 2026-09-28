@@ -14,11 +14,13 @@ const content = {
             { type: 'p', text: 'В природе серебро встречается в различных формах: в виде самородков, минералов, а также в составе разных руд. Самородное серебро находят крайне редко, но при этом его самородки бывают гораздо крупнее золотых: самый большой в мире был обнаружен в XIX веке в Колумбии и весил 120 тонн. В самородном серебре могут содержаться примеси золота, ртути, меди и многих других металлов.' }
         ],
         intrusions: [
-            'мы были здесь',
-            'как давно вы смотрели на звёзды?',
-            'помогите',
-            'тут холодно',
-            'он всё ещё смотрит'
+            { text: 'мы были здесь', loud: false },
+            { text: 'как давно вы смотрели на звёзды?', loud: false },
+            { text: 'плжалуйста', loud: false },
+            { text: 'тут холодно', loud: false },
+            { text: '[сообщение удалено]', loud: false },
+            { text: 'УХОДИ, ПРОШУ ТЕБЯ', loud: true },
+            { text: 'хватит лезть', loud: false }
         ]
     },
     eng: {
@@ -36,11 +38,13 @@ const content = {
             { type: 'p', text: 'In nature, silver occurs in various forms: as nuggets, as minerals, and as part of various ores. Native silver is found extremely rarely, but its nuggets can be much larger than gold ones: the largest in the world was discovered in the 19th century in Colombia and weighed 120 tonnes. Native silver may contain impurities of gold, mercury, copper and many other metals.' }
         ],
         intrusions: [
-            'we were here',
-            'how long since you looked at the stars?',
-            'help us',
-            "it's cold here",
-            'he is still watching'
+            { text: 'we were here', loud: false },
+            { text: 'how long since you looked at the stars?', loud: false },
+            { text: 'plese', loud: false },
+            { text: "it's cold here", loud: false },
+            { text: '[message deleted]', loud: false },
+            { text: 'GO AWAY, I BEG YOU', loud: true },
+            { text: 'stop poking around', loud: false }
         ]
     }
 };
@@ -79,7 +83,7 @@ async function typeParagraph(el, text, lang, myGen) {
             i - lastIntrusionAt > 60 &&
             i > 40 &&
             i < text.length - 40 &&
-            Math.random() < 0.0028
+            Math.random() < 0.0032
         ) {
             lastIntrusionAt = i;
             await doIntrusion(el, lang, myGen);
@@ -92,11 +96,8 @@ async function typeParagraph(el, text, lang, myGen) {
             i > 3
         ) {
             const wrongCount = 1 + Math.floor(Math.random() * 2);
-            let appended = '';
             for (let w = 0; w < wrongCount; w++) {
-                const ch = randomWrongChar(text[i]);
-                appended += ch;
-                el.textContent += ch;
+                el.textContent += randomWrongChar(text[i]);
                 await sleep(70 + Math.random() * 60);
                 if (generation !== myGen) return;
             }
@@ -122,14 +123,14 @@ async function typeParagraph(el, text, lang, myGen) {
 }
 
 async function doIntrusion(paragraphEl, lang, myGen) {
-    const messages = content[lang].intrusions;
-    const msg = messages[Math.floor(Math.random() * messages.length)];
+    const list = content[lang].intrusions;
+    const pick = list[Math.floor(Math.random() * list.length)];
 
     const ghost = document.createElement('div');
-    ghost.className = 'ghost-line';
+    ghost.className = 'ghost-line' + (pick.loud ? ' loud' : '');
     paragraphEl.after(ghost);
 
-    for (const ch of msg) {
+    for (const ch of pick.text) {
         if (generation !== myGen) { ghost.remove(); return; }
         ghost.textContent += ch;
         await sleep(45 + Math.random() * 55);
