@@ -27,11 +27,8 @@ body {
     background-color: #0d0d0d;
     color: #B81D23;
     font-family: 'Catherine', 'Tiny5', sans-serif;
-    font-size: 20px;
+    font-size: 18px;
     overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     position: relative;
 }
 
@@ -39,8 +36,8 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    width: 24px;
-    height: 24px;
+    width: 12px;
+    height: 12px;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 6 6' shape-rendering='crispEdges'><rect x='1' width='4' height='1' fill='%23B81D23'/><rect y='1' width='6' height='4' fill='%23B81D23'/><rect x='1' y='5' width='4' height='1' fill='%23B81D23'/></svg>");
     background-size: contain;
     background-repeat: no-repeat;
@@ -59,8 +56,8 @@ body {
 
 .void-cursor.hover {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 6 6' shape-rendering='crispEdges'><rect x='1' width='4' height='1' fill='%23B81D23'/><rect y='1' width='1' height='4' fill='%23B81D23'/><rect x='5' y='1' width='1' height='4' fill='%23B81D23'/><rect x='1' y='5' width='4' height='1' fill='%23B81D23'/></svg>");
-    width: 32px;
-    height: 32px;
+    width: 16px;
+    height: 16px;
 }
 
 @media (hover: none), (pointer: coarse) {
@@ -68,41 +65,38 @@ body {
     .void-cursor { display: none; }
 }
 
-.void-image {
-    position: fixed;
-    left: 48px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 160px;
-    height: 260px;
-    overflow: hidden;
-    border: 1px solid #4A1F1F;
-    box-shadow: 0 0 24px rgba(184, 29, 35, 0.25);
-    z-index: 2;
-}
-
-.void-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    filter: grayscale(0.3) contrast(1.1) brightness(0.85) sepia(0.25) hue-rotate(-20deg);
-}
-
 .void-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    padding: 0 80px 0 260px;
+    padding: 60px 340px 60px 60px;
+    z-index: 1;
 }
 
 .void-content h1 {
     font-family: 'Mephisto', 'Catherine', serif;
     font-weight: normal;
     color: #B81D23;
-    font-size: 42px;
+    font-size: 44px;
     line-height: 1.4;
     letter-spacing: 2px;
+    margin-bottom: 28px;
     text-shadow: 0 0 10px rgba(184, 29, 35, 0.75), 0 0 28px rgba(184, 29, 35, 0.45);
     animation: voidPulse 4s ease-in-out infinite;
+}
+
+.void-content p {
+    font-family: 'Catherine', sans-serif;
+    color: #B81D23;
+    font-size: 18px;
+    line-height: 1.7;
+    max-width: 620px;
+    margin-bottom: 18px;
+    text-shadow: 0 0 6px rgba(184, 29, 35, 0.35);
 }
 
 @keyframes voidPulse {
@@ -110,26 +104,55 @@ body {
     50% { opacity: 1; }
 }
 
+.void-image {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 300px;
+    overflow: hidden;
+    z-index: 5;
+    pointer-events: none;
+    -webkit-mask-image: linear-gradient(to left, #000 60%, transparent 100%);
+    mask-image: linear-gradient(to left, #000 60%, transparent 100%);
+}
+
+.void-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(0.35) contrast(1.15) brightness(0.75) sepia(0.3) hue-rotate(-25deg);
+    opacity: 0.9;
+}
+
 @media (max-width: 700px) {
     body {
         overflow: auto;
-        padding: 40px 0;
-    }
-
-    .void-image {
-        left: 50%;
-        top: 40px;
-        transform: translateX(-50%);
-        width: 110px;
-        height: 170px;
     }
 
     .void-content {
-        padding: 0 20px;
-        margin-top: 220px;
+        position: relative;
+        padding: 240px 24px 60px;
+        min-height: 100vh;
     }
 
     .void-content h1 {
-        font-size: 26px;
+        font-size: 28px;
+        margin-bottom: 20px;
+    }
+
+    .void-content p {
+        font-size: 16px;
+    }
+
+    .void-image {
+        top: 0;
+        right: 0;
+        left: 0;
+        width: 100%;
+        height: 200px;
+        -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+        mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
     }
 }
