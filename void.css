@@ -151,6 +151,26 @@ body {
     transform: translateY(1px);
 }
 
+.void-back {
+    position: fixed;
+    top: calc(18px + env(safe-area-inset-top));
+    left: calc(60px + env(safe-area-inset-left));
+    z-index: 10001;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.void-back-arrow {
+    font-size: 11px;
+    line-height: 1;
+    transform: translateY(-1px);
+    transition: transform 0.3s ease;
+}
+
+.void-back:hover .void-back-arrow {
+    transform: translate(-3px, -1px);
+}
+
 .void-cursor {
     position: fixed;
     top: 0;
@@ -240,6 +260,116 @@ body {
 @media (max-width: 1100px) {
     .void-side {
         display: none;
+    }
+}
+
+.void-rec {
+    position: fixed;
+    bottom: calc(28px + env(safe-area-inset-bottom));
+    left: calc(60px + env(safe-area-inset-left));
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-family: 'Catherine', 'Mephisto', serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    line-height: 1;
+    color: #B81D23;
+    opacity: 0.8;
+    user-select: none;
+    transition: opacity 0.3s ease;
+}
+
+.void-rec-circle {
+    position: relative;
+    display: block;
+    width: 12.6px;
+    height: 12.6px;
+    border: 1px solid #B81D23;
+    border-radius: 50%;
+    background: transparent;
+    flex-shrink: 0;
+    box-shadow: 0 0 6px rgba(184, 29, 35, 0.55), inset 0 0 4px rgba(184, 29, 35, 0.35);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    will-change: transform;
+}
+
+.void-rec-text {
+    animation: recBlink 2s steps(1, end) infinite;
+}
+
+@keyframes recBlink {
+    0%, 55% { opacity: 1; }
+    56%, 100% { opacity: 0.35; }
+}
+
+.void-rec-circle::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2px;
+    height: 2px;
+    margin: -1px 0 0 -1px;
+    border-radius: 50%;
+    background: #ff4a52;
+    box-shadow:
+        0 -12px 0 0 #ff4a52,
+        8.5px -8.5px 0 0 #ff4a52,
+        12px 0 0 0 #ff4a52,
+        8.5px 8.5px 0 0 #ff4a52,
+        0 12px 0 0 #ff4a52,
+        -8.5px 8.5px 0 0 #ff4a52,
+        -12px 0 0 0 #ff4a52,
+        -8.5px -8.5px 0 0 #ff4a52;
+    opacity: 0;
+    pointer-events: none;
+    filter: drop-shadow(0 0 3px rgba(184, 29, 35, 0.95));
+    transform: scale(0.4);
+}
+
+.void-rec.active {
+    opacity: 1;
+}
+
+.void-rec.active .void-rec-text {
+    animation-duration: 0.9s;
+}
+
+.void-rec.active .void-rec-circle {
+    border-color: #ff4a52;
+    box-shadow:
+        0 0 12px rgba(184, 29, 35, 0.95),
+        0 0 26px rgba(184, 29, 35, 0.55),
+        inset 0 0 8px rgba(184, 29, 35, 0.6);
+    animation: recHeartbeat 0.85s ease-in-out infinite;
+}
+
+.void-rec.active .void-rec-circle::before {
+    animation: recSparks 0.85s ease-out infinite;
+}
+
+@keyframes recHeartbeat {
+    0%   { transform: scale(1); }
+    20%  { transform: scale(0.62); }
+    55%  { transform: scale(1.35); }
+    80%  { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes recSparks {
+    0%   { opacity: 0; transform: scale(0.4); }
+    35%  { opacity: 1; }
+    100% { opacity: 0; transform: scale(1.9); }
+}
+
+@media (hover: none), (pointer: coarse) {
+    .void-rec-circle {
+        animation: recHeartbeat 2.6s ease-in-out infinite;
+    }
+    .void-rec-circle::before {
+        animation: recSparks 2.6s ease-out infinite;
     }
 }
 
@@ -453,6 +583,18 @@ body {
         gap: 6px;
     }
 
+    .void-back {
+        top: calc(10px + env(safe-area-inset-top));
+        left: calc(40px + env(safe-area-inset-left));
+    }
+
+    .void-rec {
+        bottom: calc(22px + env(safe-area-inset-bottom));
+        left: calc(40px + env(safe-area-inset-left));
+        font-size: 12px;
+        letter-spacing: 2px;
+    }
+
     .void-btn {
         font-size: 12px;
         padding: 9px 12px;
@@ -503,6 +645,14 @@ body {
         padding: 8px 10px;
         min-height: 36px;
         letter-spacing: 0.5px;
+    }
+
+    .void-back {
+        left: calc(36px + env(safe-area-inset-left));
+    }
+
+    .void-rec {
+        left: calc(36px + env(safe-area-inset-left));
     }
 
     .void-article h1 {
