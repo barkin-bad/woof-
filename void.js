@@ -10,7 +10,7 @@ const content = {
             { type: 'p', text: 'Ежегодно больше половины добываемого серебра используется в промышленности, из-за чего спрос на него постоянно растёт. Именно поэтому серебро считается важным инвестиционным ресурсом. Оно почти в 85 раз дешевле золота, что во многом объясняет его широкую популярность. Ещё со времён Римской империи серебряные монеты чеканили для внутреннего обращения, а золотые — для международной торговли.' },
             { type: 'figure', size: 'left', src: 'https://i.pinimg.com/736x/a4/ea/e4/a4eae4326c8ce481a3d37ff79ed6b821.jpg' },
             { type: 'p', text: 'Серебро занимает заметное место в мифологии разных стран. В Древней Греции этот металл олицетворял богиню Луны Артемиду. В европейском фольклоре победить вампиров и оборотней можно было только с помощью серебряного клинка. В восточной мифологии серебро считается одним из главных символов энергии Инь, женского начала всего сущего.' },
-            { type: 'figure', size: 'right', src: 'https://i.pinimg.com/736x/6e/8c/6c/6e8c6c362b2748aec0cbe2c668d9090e.jpg' },
+            { type: 'figure', size: 'vert', src: 'https://i.pinimg.com/736x/6e/8c/6c/6e8c6c362b2748aec0cbe2c668d9090e.jpg' },
             { type: 'p', text: 'В природе серебро встречается в различных формах: в виде самородков, минералов, а также в составе разных руд. Самородное серебро находят крайне редко, но при этом его самородки бывают гораздо крупнее золотых: самый большой в мире был обнаружен в XIX веке в Колумбии и весил 120 тонн. В самородном серебре могут содержаться примеси золота, ртути, меди и многих других металлов.' }
         ],
         intrusions: [
@@ -34,7 +34,7 @@ const content = {
             { type: 'p', text: 'Every year, more than half of the mined silver is used in industry, which is why demand for it keeps growing. That is why silver is considered an important investment resource. It is almost 85 times cheaper than gold, which largely explains its wide popularity. As far back as the Roman Empire, silver coins were minted for domestic circulation, and gold ones — for international trade.' },
             { type: 'figure', size: 'left', src: 'https://i.pinimg.com/736x/a4/ea/e4/a4eae4326c8ce481a3d37ff79ed6b821.jpg' },
             { type: 'p', text: 'Silver holds a notable place in the mythology of various countries. In Ancient Greece this metal personified Artemis, the goddess of the Moon. In European folklore, vampires and werewolves could only be defeated with a silver blade. In Eastern mythology, silver is considered one of the main symbols of Yin energy, the feminine principle of all that exists.' },
-            { type: 'figure', size: 'right', src: 'https://i.pinimg.com/736x/6e/8c/6c/6e8c6c362b2748aec0cbe2c668d9090e.jpg' },
+            { type: 'figure', size: 'vert', src: 'https://i.pinimg.com/736x/6e/8c/6c/6e8c6c362b2748aec0cbe2c668d9090e.jpg' },
             { type: 'p', text: 'In nature, silver occurs in various forms: as nuggets, as minerals, and as part of various ores. Native silver is found extremely rarely, but its nuggets can be much larger than gold ones: the largest in the world was discovered in the 19th century in Colombia and weighed 120 tonnes. Native silver may contain impurities of gold, mercury, copper and many other metals.' }
         ],
         intrusions: [
@@ -197,19 +197,58 @@ function renderArticle(lang) {
     h1.textContent = c.title;
     article.appendChild(h1);
 
-    c.blocks.forEach((block, idx) => {
-        if (block.type === 'p') {
-            article.appendChild(makeParagraph(idx, block.text));
-        } else if (block.type === 'figure') {
-            const fig = document.createElement('figure');
-            fig.className = 'void-figure void-figure-' + block.size;
-            const img = document.createElement('img');
-            img.src = block.src;
-            img.alt = '';
-            fig.appendChild(img);
-            article.appendChild(fig);
+    let figIndex = 0;
+
+    function buildFigure(block) {
+        const fig = document.createElement('figure');
+        fig.className = 'void-figure void-figure-' + block.size;
+        const img = document.createElement('img');
+        img.src = block.src;
+        img.alt = '';
+        img.style.animationDuration = (9 + figIndex * 1.3) + 's';
+        img.style.animationDelay = '-' + (figIndex * 2.4) + 's';
+        figIndex++;
+        fig.appendChild(img);
+        return fig;
+    }
+
+    let i = 0;
+    while (i < c.blocks.length) {
+        const block = c.blocks[i];
+
+        if (block.type === 'figure' && (block.size === 'right' || block.size === 'left')) {
+            const next = c.blocks[i + 1];
+            if (next && next.type === 'p') {
+                const pair = document.createElement('div');
+                pair.className = 'void-pair';
+
+                const textCol = document.createElement('div');
+                textCol.className = 'void-pair-text';
+                textCol.appendChild(makeParagraph(i + 1, next.text));
+
+                const figEl = buildFigure(block);
+
+                if (block.size === 'right') {
+                    pair.appendChild(textCol);
+                    pair.appendChild(figEl);
+                } else {
+                    pair.appendChild(figEl);
+                    pair.appendChild(textCol);
+                }
+
+                article.appendChild(pair);
+                i += 2;
+                continue;
+            }
         }
-    });
+
+        if (block.type === 'p') {
+            article.appendChild(makeParagraph(i, block.text));
+        } else if (block.type === 'figure') {
+            article.appendChild(buildFigure(block));
+        }
+        i++;
+    }
 
     observer.disconnect();
     document.querySelectorAll('.void-article p[data-idx]').forEach(p => {
