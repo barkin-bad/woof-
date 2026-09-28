@@ -31,10 +31,8 @@ body {
     position: relative;
     overflow-x: hidden;
     overflow-y: auto;
-    padding: 80px 0 120px;
+    padding: 90px 0 140px;
 }
-
-/* ---------- курсор ---------- */
 
 .void-cursor {
     position: fixed;
@@ -50,7 +48,7 @@ body {
     z-index: 10000;
     opacity: 0;
     will-change: transform, width, height, opacity;
-    transition: opacity 0.6s ease, width 0.6s ease, height 0.6s ease, filter 0.6s ease;
+    transition: opacity 0.4s ease, width 0.4s ease, height 0.4s ease, filter 0.4s ease;
     filter: drop-shadow(0 0 4px rgba(184, 29, 35, 0.85));
 }
 
@@ -67,8 +65,8 @@ body {
 .void-cursor.sleeping {
     width: 5px;
     height: 5px;
-    opacity: 0.28;
-    filter: drop-shadow(0 0 2px rgba(184, 29, 35, 0.35));
+    opacity: 0.25;
+    filter: none;
 }
 
 @media (hover: none), (pointer: coarse) {
@@ -76,53 +74,44 @@ body {
     .void-cursor { display: none; }
 }
 
-/* ---------- звук ---------- */
-
-.sound-btn {
+.void-controls {
     position: fixed;
-    top: 24px;
+    top: 20px;
     right: 24px;
-    width: 34px;
-    height: 34px;
-    background: rgba(30, 30, 30, 0.7);
-    border: 1px solid #4A1F1F;
+    z-index: 10001;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    animation: soundPulse 3s ease-in-out infinite;
+    gap: 8px;
+    font-family: 'Catherine', sans-serif;
 }
 
-.sound-btn:hover {
+.ctrl-btn {
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1;
+    color: #B81D23;
+    background: rgba(20, 5, 5, 0.7);
+    border: 1px solid #4A1F1F;
+    padding: 7px 11px;
+    letter-spacing: 1px;
+    text-transform: lowercase;
+    transition: color 0.3s ease, background 0.3s ease,
+                border-color 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+    backdrop-filter: blur(4px);
+}
+
+.ctrl-btn:hover,
+.ctrl-btn.active {
+    color: #ffffff;
+    background: rgba(184, 29, 35, 0.28);
     border-color: #B81D23;
-    box-shadow: 0 0 10px rgba(184, 29, 35, 0.55);
+    box-shadow: 0 0 10px rgba(184, 29, 35, 0.55),
+                0 0 22px rgba(184, 29, 35, 0.3);
 }
 
-.sound-dot {
-    width: 8px;
-    height: 8px;
-    background: #4A1F1F;
-    transition: background 0.3s ease, box-shadow 0.3s ease;
+.ctrl-btn.muted {
+    opacity: 0.45;
+    text-decoration: line-through;
 }
-
-.sound-btn.on .sound-dot {
-    background: #B81D23;
-    box-shadow: 0 0 8px rgba(184, 29, 35, 0.9), 0 0 18px rgba(184, 29, 35, 0.5);
-    animation: soundDot 1.4s ease-in-out infinite;
-}
-
-@keyframes soundPulse {
-    0%, 100% { opacity: 0.85; }
-    50% { opacity: 1; }
-}
-
-@keyframes soundDot {
-    0%, 100% { opacity: 0.7; transform: scale(0.9); }
-    50% { opacity: 1; transform: scale(1.15); }
-}
-
-/* ---------- статья ---------- */
 
 .void-article {
     max-width: 760px;
@@ -136,7 +125,7 @@ body {
     clear: both;
 }
 
-.void-article h1 {
+.void-title {
     font-family: 'Mephisto', 'Catherine', serif;
     font-weight: normal;
     color: #B81D23;
@@ -145,47 +134,9 @@ body {
     letter-spacing: 3px;
     text-align: center;
     margin-bottom: 56px;
-    text-shadow: 0 0 10px rgba(184, 29, 35, 0.75), 0 0 28px rgba(184, 29, 35, 0.45);
+    text-shadow: 0 0 10px rgba(184, 29, 35, 0.75),
+                 0 0 28px rgba(184, 29, 35, 0.45);
     animation: voidPulse 4s ease-in-out infinite;
-}
-
-.void-article p {
-    font-family: 'Catherine', serif;
-    color: #B81D23;
-    font-size: 20px;
-    line-height: 1.8;
-    margin-bottom: 22px;
-}
-
-.void-article p .main-text {
-    color: #B81D23;
-}
-
-.void-article p.typing::after {
-    content: "▌";
-    display: inline-block;
-    margin-left: 2px;
-    color: #B81D23;
-    animation: caretBlink 0.9s steps(1) infinite;
-    text-shadow: 0 0 6px rgba(184, 29, 35, 0.9);
-}
-
-@keyframes caretBlink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0; }
-}
-
-.intrusion {
-    color: #FFFFFF;
-    font-style: italic;
-    letter-spacing: 1px;
-    animation: intrusionFlicker 0.12s steps(2) infinite;
-}
-
-@keyframes intrusionFlicker {
-    0%   { opacity: 1; text-shadow: 0 0 6px rgba(255,255,255,0.8); }
-    50%  { opacity: 0.55; text-shadow: -1px 0 rgba(0, 229, 255, 0.7), 1px 0 rgba(184, 29, 35, 0.9); }
-    100% { opacity: 1; text-shadow: 0 0 6px rgba(255,255,255,0.8); }
 }
 
 @keyframes voidPulse {
@@ -193,7 +144,42 @@ body {
     50% { opacity: 1; }
 }
 
-/* ---------- картинки с «дыханием» ---------- */
+.void-p {
+    font-family: 'Catherine', serif;
+    color: #B81D23;
+    font-size: 20px;
+    line-height: 1.8;
+    margin-bottom: 22px;
+    transition: text-shadow 0.3s ease, letter-spacing 0.3s ease;
+}
+
+.void-p.typing::after {
+    content: "_";
+    animation: blink 1s step-end infinite;
+    margin-left: 2px;
+    opacity: 0.75;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 0.75; }
+    51%, 100% { opacity: 0; }
+}
+
+.void-p.possessed {
+    animation: possessShake 0.13s infinite;
+    text-shadow: 0 0 14px rgba(184, 29, 35, 1),
+                 0 0 30px rgba(184, 29, 35, 0.7);
+    letter-spacing: 3px;
+    color: #ff2a33;
+}
+
+@keyframes possessShake {
+    0%   { transform: translate(0, 0); }
+    25%  { transform: translate(-1px, 1px); }
+    50%  { transform: translate(1px, 0); }
+    75%  { transform: translate(0, -1px); }
+    100% { transform: translate(0, 0); }
+}
 
 .void-figure {
     margin: 40px 0;
@@ -210,18 +196,14 @@ body {
     display: block;
     filter: grayscale(0.5) contrast(1.2) brightness(0.85) sepia(0.35) hue-rotate(-25deg) saturate(1.8);
     opacity: 0.9;
-    animation: breathe 9s ease-in-out infinite;
-    will-change: transform;
+    transform-origin: center;
+    animation: imgBreath 14s ease-in-out infinite;
 }
 
-@keyframes breathe {
+@keyframes imgBreath {
     0%, 100% { transform: scale(1); }
     50%      { transform: scale(1.045); }
 }
-
-.void-figure:nth-of-type(2) img { animation-duration: 11s; animation-delay: -2.5s; }
-.void-figure:nth-of-type(3) img { animation-duration: 8s;  animation-delay: -4s; }
-.void-figure:nth-of-type(4) img { animation-duration: 12s; animation-delay: -6s; }
 
 .void-figure-full {
     width: 100%;
@@ -244,21 +226,31 @@ body {
 
 @media (max-width: 700px) {
     body {
-        padding: 48px 0 80px;
+        padding: 64px 0 90px;
         font-size: 18px;
+    }
+
+    .void-controls {
+        top: 14px;
+        right: 14px;
+    }
+
+    .ctrl-btn {
+        font-size: 12px;
+        padding: 6px 9px;
     }
 
     .void-article {
         padding: 0 20px;
     }
 
-    .void-article h1 {
+    .void-title {
         font-size: 32px;
         margin-bottom: 36px;
         letter-spacing: 2px;
     }
 
-    .void-article p {
+    .void-p {
         font-size: 18px;
         line-height: 1.7;
     }
@@ -273,12 +265,5 @@ body {
         width: 100%;
         height: 260px;
         margin: 28px 0;
-    }
-
-    .sound-btn {
-        top: 16px;
-        right: 16px;
-        width: 30px;
-        height: 30px;
     }
 }
