@@ -104,10 +104,65 @@ body {
     .void-cursor { display: none; }
 }
 
+.void-side {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-family: 'Catherine', serif;
+    font-size: 16px;
+    letter-spacing: 14px;
+    color: #B81D23;
+    opacity: 0.3;
+    z-index: 2;
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+    animation: sideFlicker 8s ease-in-out infinite;
+}
+
+.void-side-left {
+    left: 34px;
+}
+
+.void-side-right {
+    right: 34px;
+    letter-spacing: 12px;
+    opacity: 0.24;
+    animation-delay: -4s;
+}
+
+@keyframes sideFlicker {
+    0%, 100% { opacity: 0.3; }
+    42% { opacity: 0.18; }
+    55% { opacity: 0.34; }
+    71% { opacity: 0.12; }
+}
+
+.void-side-right {
+    animation-name: sideFlickerRight;
+}
+
+@keyframes sideFlickerRight {
+    0%, 100% { opacity: 0.24; }
+    38% { opacity: 0.12; }
+    58% { opacity: 0.28; }
+    76% { opacity: 0.08; }
+}
+
+@media (max-width: 1100px) {
+    .void-side {
+        display: none;
+    }
+}
+
 .void-article {
     max-width: 760px;
     margin: 0 auto;
     padding: 0 32px;
+    position: relative;
+    z-index: 1;
 }
 
 .void-article::after {
@@ -130,16 +185,28 @@ body {
 }
 
 .void-article p {
+    position: relative;
     font-family: 'Catherine', serif;
     color: #B81D23;
     font-size: 20px;
     line-height: 1.8;
     margin-bottom: 22px;
-    min-height: 1.8em;
     white-space: pre-wrap;
 }
 
-.void-article p[data-state="typing"]::after {
+.void-p-reserve {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.void-p-live {
+    position: absolute;
+    top: 0;
+    left: 0;
+    white-space: pre-wrap;
+}
+
+.void-article p[data-state="typing"] .void-p-live::after {
     content: "▌";
     display: inline-block;
     margin-left: 2px;
@@ -246,6 +313,7 @@ body {
     width: 260px;
     height: 340px;
     margin: 8px 0 24px 32px;
+    shape-outside: margin-box;
 }
 
 .void-figure-left {
@@ -253,6 +321,7 @@ body {
     width: 260px;
     height: 340px;
     margin: 8px 32px 24px 0;
+    shape-outside: margin-box;
 }
 
 @media (max-width: 700px) {
