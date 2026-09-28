@@ -3,6 +3,7 @@
             padding: 0;
             box-sizing: border-box;
             border-radius: 0;
+            cursor: none;
         }
 
         html, body {
@@ -12,11 +13,11 @@
         body {
             background-color: #151515;
             color: #D1C0A6;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Tiny5', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 18px;
             display: flex;
             height: 100vh;
             overflow: hidden;
-            -webkit-tap-highlight-color: transparent;
         }
 
         .grain {
@@ -47,6 +48,39 @@
             100% { transform: translate3d(0, 0, 0); }
         }
 
+        .cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 12px;
+            height: 12px;
+            background: #FFFFFF;
+            border: 2px solid #FFFFFF;
+            pointer-events: none;
+            z-index: 10000;
+            opacity: 0;
+            will-change: transform;
+            transition: width 0.2s ease, height 0.2s ease,
+                        background 0.2s ease, border-color 0.2s ease,
+                        opacity 0.3s ease;
+        }
+
+        .cursor.visible {
+            opacity: 1;
+        }
+
+        .cursor.hover {
+            width: 24px;
+            height: 24px;
+            background: transparent;
+            border-color: #FFFFFF;
+        }
+
+        @media (hover: none), (pointer: coarse) {
+            * { cursor: auto; }
+            .cursor { display: none; }
+        }
+
         .lang-switch {
             position: fixed;
             top: 24px;
@@ -57,15 +91,15 @@
         }
 
         .lang-btn {
-            font-family: inherit;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 1.5px;
+            font-family: 'Press Start 2P', 'Tiny5', monospace;
+            font-size: 9px;
+            line-height: 1;
+            letter-spacing: 1px;
             text-transform: uppercase;
             color: #D1C0A6;
             background-color: rgba(30, 30, 30, 0.75);
             border: 1px solid #4A1F1F;
-            padding: 7px 14px;
+            padding: 9px 12px;
             transition: color 0.3s ease, background 0.3s ease,
                         border-color 0.3s ease, box-shadow 0.3s ease;
         }
@@ -85,6 +119,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: none;
             overflow: hidden;
         }
 
@@ -232,12 +267,14 @@
         }
 
         .navigation a {
+            font-family: 'Press Start 2P', 'Tiny5', monospace;
             color: #D1C0A6;
             text-decoration: none;
-            font-size: 18px;
+            font-size: 11px;
+            line-height: 1.5;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            padding: 12px;
+            letter-spacing: 0.5px;
+            padding: 12px 10px;
             background-color: #1E1E1E;
             border: 1px solid transparent;
             transition: all 0.3s ease;
@@ -298,125 +335,136 @@
         }
 
         .content h1 {
+            font-family: 'Press Start 2P', 'Tiny5', monospace;
             color: #B81D23;
-            font-size: 36px;
-            margin-bottom: 20px;
-            font-weight: 600;
+            font-size: 22px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            font-weight: 400;
         }
 
         .content p {
-            font-size: 18px;
+            font-size: 20px;
             line-height: 1.6;
             margin-bottom: 20px;
             max-width: 800px;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
             html, body {
                 height: auto;
-                min-height: 100%;
             }
 
             body {
                 flex-direction: column;
-                min-height: 100dvh;
+                height: auto;
+                min-height: 100vh;
                 overflow-x: hidden;
                 overflow-y: auto;
-                padding-top: 58px;
+                padding-top: 62px;
+                font-size: 17px;
             }
 
             .lang-switch {
-                top: 12px;
-                right: 12px;
+                top: 14px;
+                right: 14px;
                 gap: 6px;
             }
 
             .lang-btn {
-                font-size: 11px;
-                letter-spacing: 1px;
-                padding: 6px 10px;
-            }
-
-            .intro-star {
-                width: 100px;
-                height: 100px;
+                font-size: 8px;
+                padding: 7px 9px;
             }
 
             .sidebar {
                 width: 100%;
                 height: auto;
-                padding: 24px 20px 26px;
+                padding: 22px 16px 26px;
                 border-right: none;
                 border-bottom: 1px solid #4A1F1F;
                 align-items: center;
             }
 
             .profile-container {
-                width: 160px;
-                height: 160px;
-                margin-bottom: 22px;
+                width: 140px;
+                height: 140px;
+                margin-bottom: 18px;
             }
 
             .glow {
-                width: 160px;
-                height: 160px;
+                width: 140px;
+                height: 140px;
             }
 
             .avatar {
-                width: 100px;
-                height: 100px;
+                width: 86px;
+                height: 86px;
             }
 
             .navigation {
-                gap: 10px;
-                margin-top: 0;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+                margin-top: 4px;
             }
 
             .navigation a {
-                font-size: 15px;
-                padding: 12px 10px;
-                text-align: center;
+                font-size: 9px;
+                padding: 10px 9px;
             }
 
             .content {
-                flex-grow: 1;
-                padding: 26px 20px 60px;
+                padding: 28px 18px 70px;
                 overflow: visible;
             }
 
             .content h1 {
-                font-size: 25px;
-                margin-bottom: 14px;
+                font-size: 16px;
+                margin-bottom: 18px;
             }
 
             .content p {
-                font-size: 16px;
-                line-height: 1.55;
+                font-size: 18px;
                 margin-bottom: 16px;
+            }
+
+            .intro-star {
+                width: 110px;
+                height: 110px;
             }
         }
 
-        @media (max-width: 380px) {
-            .content h1 {
-                font-size: 22px;
-            }
-
-            .content p {
-                font-size: 15px;
+        @media (max-width: 420px) {
+            body {
+                padding-top: 56px;
             }
 
             .navigation a {
+                font-size: 8px;
+                padding: 9px 8px;
+            }
+
+            .content h1 {
                 font-size: 14px;
             }
 
-            .profile-container,
+            .content p {
+                font-size: 17px;
+            }
+
+            .profile-container {
+                width: 120px;
+                height: 120px;
+            }
+
             .glow {
-                width: 130px;
-                height: 130px;
+                width: 120px;
+                height: 120px;
             }
 
             .avatar {
-                width: 80px;
-                height: 80px;
+                width: 74px;
+                height: 74px;
             }
         }
