@@ -49,12 +49,16 @@ const content = {
     }
 };
 
+const backLabels = {
+    ru: '← назад',
+    eng: '← back'
+};
+
 const voidCursor = document.getElementById('voidCursor');
 const article = document.getElementById('voidArticle');
 const soundToggle = document.getElementById('soundToggle');
+const backBtn = document.getElementById('backBtn');
 const langButtons = document.querySelectorAll('.lang-btn');
-const voidRec = document.getElementById('voidRec');
-const backText = document.getElementById('backText');
 
 let currentLang = 'ru';
 let generation = 0;
@@ -264,9 +268,7 @@ function setLang(lang) {
     langButtons.forEach(btn => {
         btn.classList.toggle('active', btn.dataset.lang === lang);
     });
-    if (backText) {
-        backText.textContent = lang === 'ru' ? 'назад' : 'back';
-    }
+    if (backBtn) backBtn.textContent = backLabels[lang] || backLabels.ru;
     try { localStorage.setItem('voidLang', lang); } catch (e) {}
     renderArticle(lang);
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -313,21 +315,12 @@ document.addEventListener('mouseleave', () => {
 });
 
 document.addEventListener('mouseover', (e) => {
-    if (e.target.closest('a, button')) voidCursor.classList.add('hover');
+    if (e.target.closest('a, button, .rec-dot-wrap')) voidCursor.classList.add('hover');
 });
 
 document.addEventListener('mouseout', (e) => {
-    if (e.target.closest('a, button')) voidCursor.classList.remove('hover');
+    if (e.target.closest('a, button, .rec-dot-wrap')) voidCursor.classList.remove('hover');
 });
-
-if (voidRec) {
-    voidRec.addEventListener('mouseenter', () => {
-        voidRec.classList.add('active');
-    });
-    voidRec.addEventListener('mouseleave', () => {
-        voidRec.classList.remove('active');
-    });
-}
 
 let audioCtx = null;
 let masterGain = null;
