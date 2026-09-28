@@ -10,7 +10,7 @@ const content = {
             { type: 'p', text: 'Ежегодно больше половины добываемого серебра используется в промышленности, из-за чего спрос на него постоянно растёт. Именно поэтому серебро считается важным инвестиционным ресурсом. Оно почти в 85 раз дешевле золота, что во многом объясняет его широкую популярность. Ещё со времён Римской империи серебряные монеты чеканили для внутреннего обращения, а золотые — для международной торговли.' },
             { type: 'figure', size: 'left', src: 'https://i.pinimg.com/736x/a4/ea/e4/a4eae4326c8ce481a3d37ff79ed6b821.jpg' },
             { type: 'p', text: 'Серебро занимает заметное место в мифологии разных стран. В Древней Греции этот металл олицетворял богиню Луны Артемиду. В европейском фольклоре победить вампиров и оборотней можно было только с помощью серебряного клинка. В восточной мифологии серебро считается одним из главных символов энергии Инь, женского начала всего сущего.' },
-            { type: 'figure', size: 'full', src: 'https://i.pinimg.com/736x/6e/8c/6c/6e8c6c362b2748aec0cbe2c668d9090e.jpg' },
+            { type: 'figure', size: 'right', src: 'https://i.pinimg.com/736x/6e/8c/6c/6e8c6c362b2748aec0cbe2c668d9090e.jpg' },
             { type: 'p', text: 'В природе серебро встречается в различных формах: в виде самородков, минералов, а также в составе разных руд. Самородное серебро находят крайне редко, но при этом его самородки бывают гораздо крупнее золотых: самый большой в мире был обнаружен в XIX веке в Колумбии и весил 120 тонн. В самородном серебре могут содержаться примеси золота, ртути, меди и многих других металлов.' }
         ],
         intrusions: [
@@ -34,7 +34,7 @@ const content = {
             { type: 'p', text: 'Every year, more than half of the mined silver is used in industry, which is why demand for it keeps growing. That is why silver is considered an important investment resource. It is almost 85 times cheaper than gold, which largely explains its wide popularity. As far back as the Roman Empire, silver coins were minted for domestic circulation, and gold ones — for international trade.' },
             { type: 'figure', size: 'left', src: 'https://i.pinimg.com/736x/a4/ea/e4/a4eae4326c8ce481a3d37ff79ed6b821.jpg' },
             { type: 'p', text: 'Silver holds a notable place in the mythology of various countries. In Ancient Greece this metal personified Artemis, the goddess of the Moon. In European folklore, vampires and werewolves could only be defeated with a silver blade. In Eastern mythology, silver is considered one of the main symbols of Yin energy, the feminine principle of all that exists.' },
-            { type: 'figure', size: 'full', src: 'https://i.pinimg.com/736x/6e/8c/6c/6e8c6c362b2748aec0cbe2c668d9090e.jpg' },
+            { type: 'figure', size: 'right', src: 'https://i.pinimg.com/736x/6e/8c/6c/6e8c6c362b2748aec0cbe2c668d9090e.jpg' },
             { type: 'p', text: 'In nature, silver occurs in various forms: as nuggets, as minerals, and as part of various ores. Native silver is found extremely rarely, but its nuggets can be much larger than gold ones: the largest in the world was discovered in the 19th century in Colombia and weighed 120 tonnes. Native silver may contain impurities of gold, mercury, copper and many other metals.' }
         ],
         intrusions: [
@@ -72,8 +72,10 @@ function randomWrongChar(correct) {
     return wrong;
 }
 
-async function typeParagraph(el, text, lang, myGen) {
-    el.dataset.state = 'typing';
+async function typeParagraph(p, text, lang, myGen) {
+    const live = p.querySelector('.void-p-live');
+    if (!live) return;
+    p.dataset.state = 'typing';
     let lastIntrusionAt = -999;
 
     for (let i = 0; i < text.length; i++) {
@@ -86,7 +88,7 @@ async function typeParagraph(el, text, lang, myGen) {
             Math.random() < 0.0032
         ) {
             lastIntrusionAt = i;
-            await doIntrusion(el, lang, myGen);
+            await doIntrusion(p, lang, myGen);
             if (generation !== myGen) return;
         }
 
@@ -97,19 +99,19 @@ async function typeParagraph(el, text, lang, myGen) {
         ) {
             const wrongCount = 1 + Math.floor(Math.random() * 2);
             for (let w = 0; w < wrongCount; w++) {
-                el.textContent += randomWrongChar(text[i]);
+                live.textContent += randomWrongChar(text[i]);
                 await sleep(70 + Math.random() * 60);
                 if (generation !== myGen) return;
             }
             await sleep(180 + Math.random() * 160);
             for (let w = 0; w < wrongCount; w++) {
-                el.textContent = el.textContent.slice(0, -1);
+                live.textContent = live.textContent.slice(0, -1);
                 await sleep(50);
                 if (generation !== myGen) return;
             }
         }
 
-        el.textContent += text[i];
+        live.textContent += text[i];
 
         let delay = 16 + Math.random() * 14;
         if (',;:'.includes(text[i])) delay += 90;
@@ -119,7 +121,7 @@ async function typeParagraph(el, text, lang, myGen) {
     }
 
     if (generation !== myGen) return;
-    el.dataset.state = 'done';
+    p.dataset.state = 'done';
 }
 
 async function doIntrusion(paragraphEl, lang, myGen) {
@@ -153,7 +155,7 @@ const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         const el = entry.target;
         if (!entry.isIntersecting) return;
-        if (el.dataset.state && el.dataset.state !== 'idle') return;
+        if (el.dataset.state !== 'idle') return;
 
         const idx = parseInt(el.dataset.idx, 10);
         const block = content[currentLang].blocks[idx];
@@ -164,6 +166,24 @@ const observer = new IntersectionObserver((entries) => {
         observer.unobserve(el);
     });
 }, { threshold: 0.1 });
+
+function makeParagraph(idx, fullText) {
+    const p = document.createElement('p');
+    p.dataset.idx = idx;
+    p.dataset.state = 'idle';
+
+    const reserve = document.createElement('span');
+    reserve.className = 'void-p-reserve';
+    reserve.setAttribute('aria-hidden', 'true');
+    reserve.textContent = fullText;
+
+    const live = document.createElement('span');
+    live.className = 'void-p-live';
+
+    p.appendChild(reserve);
+    p.appendChild(live);
+    return p;
+}
 
 function renderArticle(lang) {
     generation++;
@@ -179,10 +199,7 @@ function renderArticle(lang) {
 
     c.blocks.forEach((block, idx) => {
         if (block.type === 'p') {
-            const p = document.createElement('p');
-            p.dataset.idx = idx;
-            p.dataset.state = 'idle';
-            article.appendChild(p);
+            article.appendChild(makeParagraph(idx, block.text));
         } else if (block.type === 'figure') {
             const fig = document.createElement('figure');
             fig.className = 'void-figure void-figure-' + block.size;
