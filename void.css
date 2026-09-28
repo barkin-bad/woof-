@@ -19,8 +19,8 @@
     cursor: none;
 }
 
-html, body {
-    height: 100%;
+html {
+    scroll-behavior: smooth;
 }
 
 body {
@@ -28,10 +28,8 @@ body {
     color: #B81D23;
     font-family: 'Catherine', 'Tiny5', sans-serif;
     font-size: 20px;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    min-height: 100vh;
+    overflow-x: hidden;
     position: relative;
 }
 
@@ -68,31 +66,33 @@ body {
     .void-cursor { display: none; }
 }
 
-.void-content {
-    text-align: center;
-    max-width: 720px;
-    padding: 0 40px;
-    z-index: 1;
+.void-article {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 100px 48px 140px;
 }
 
-.void-content h1 {
+.void-article h1 {
     font-family: 'Mephisto', 'Catherine', serif;
     font-weight: normal;
     color: #B81D23;
-    font-size: 48px;
-    line-height: 1.4;
-    letter-spacing: 3px;
-    margin-bottom: 36px;
-    text-shadow: 0 0 10px rgba(184, 29, 35, 0.75), 0 0 28px rgba(184, 29, 35, 0.45);
+    font-size: 54px;
+    line-height: 1.3;
+    letter-spacing: 4px;
+    text-align: center;
+    margin-bottom: 70px;
+    text-shadow: 0 0 12px rgba(184, 29, 35, 0.75), 0 0 32px rgba(184, 29, 35, 0.45);
     animation: voidPulse 4s ease-in-out infinite;
 }
 
-.void-content p {
+.void-article p {
     font-family: 'Catherine', serif;
     color: #B81D23;
     font-size: 20px;
-    line-height: 1.8;
-    margin-bottom: 22px;
+    line-height: 1.85;
+    margin-bottom: 24px;
+    text-align: justify;
+    text-shadow: 0 0 4px rgba(184, 29, 35, 0.35);
 }
 
 @keyframes voidPulse {
@@ -100,56 +100,72 @@ body {
     50% { opacity: 1; }
 }
 
-.void-image {
-    position: fixed;
-    right: 60px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 260px;
-    height: 620px;
+.void-figure {
     overflow: hidden;
-    z-index: 5;
-    box-shadow: 0 0 40px rgba(184, 29, 35, 0.35);
-    mix-blend-mode: screen;
+    box-shadow: 0 0 30px rgba(184, 29, 35, 0.28);
+    border: 1px solid rgba(184, 29, 35, 0.35);
 }
 
-.void-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.void-figure img {
     display: block;
-    filter: invert(1) grayscale(1) contrast(1.4) brightness(0.9) sepia(0.4) hue-rotate(-25deg) saturate(2);
-    opacity: 0.85;
+    width: 100%;
+    height: auto;
+    filter: grayscale(1) contrast(1.15) brightness(0.9) sepia(1) hue-rotate(-35deg) saturate(3);
 }
 
-@media (max-width: 900px) {
-    body {
-        overflow: auto;
-        padding: 40px 0;
-        align-items: flex-start;
+.fig-right {
+    float: right;
+    width: 280px;
+    margin: 6px 0 24px 32px;
+}
+
+.fig-left {
+    float: left;
+    width: 260px;
+    margin: 6px 32px 24px 0;
+}
+
+.fig-wide {
+    width: 100%;
+    margin: 50px 0;
+}
+
+.void-clear {
+    clear: both;
+}
+
+@media (max-width: 720px) {
+    .void-article {
+        padding: 60px 22px 90px;
     }
 
-    .void-content {
-        padding: 0 24px;
-        margin-top: 40px;
-    }
-
-    .void-content h1 {
+    .void-article h1 {
         font-size: 32px;
-        margin-bottom: 24px;
+        letter-spacing: 2px;
+        margin-bottom: 40px;
     }
 
-    .void-content p {
+    .void-article p {
         font-size: 18px;
+        text-align: left;
     }
 
-    .void-image {
-        position: relative;
-        right: auto;
-        top: auto;
-        transform: none;
-        margin: 40px auto 0;
-        width: 200px;
-        height: 340px;
+    .fig-right,
+    .fig-left {
+        float: none;
+        width: 70%;
+        margin: 30px auto;
+    }
+
+    .fig-right {
+        margin-left: auto;
+    }
+
+    .fig-left {
+        margin-right: auto;
+    }
+
+    .fig-wide {
+        margin: 40px 0;
     }
 }
