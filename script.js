@@ -88,6 +88,32 @@ const translations = {
             }, 1300);
         });
 
+        const cursor = document.getElementById('cursor');
+        const HOVER_TARGETS = 'a, button, .intro';
+        let cursorVisible = false;
+
+        window.addEventListener('mousemove', (e) => {
+            cursor.style.transform =
+                `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`;
+            if (!cursorVisible) {
+                cursorVisible = true;
+                cursor.classList.add('visible');
+            }
+        });
+
+        document.addEventListener('mouseleave', () => {
+            cursorVisible = false;
+            cursor.classList.remove('visible');
+        });
+
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.closest(HOVER_TARGETS)) cursor.classList.add('hover');
+        });
+
+        document.addEventListener('mouseout', (e) => {
+            if (e.target.closest(HOVER_TARGETS)) cursor.classList.remove('hover');
+        });
+
         function showSection(sectionId, clickedLink) {
             const sections = document.querySelectorAll('.section-content');
             sections.forEach(section => {
