@@ -15,11 +15,11 @@ const translations = {
                 dream_title: 'Моя маленькая мечта',
                 dream_quote: '"Я обязательно смогу. Наверное."',
                 dream_p1: 'Буду честна с тем, что я далеко не дизайнер, только учусь кодингу и ищу то, что меня интересует, но тем не менее, Я бы хотела однажды помочь кому-то в создании ARG или сайта для VHS-хоррора, чтобы кто-то что-то искал или разгадывал. Мне нравится создавать эстетику чего-то загадочного, но без лишней жести.',
-                dream_p2: 'И пусть моя первая попытка будет... Здесь.',
+                dream_p2: 'И пусть моя первая попытка будет... <a href="void.html" class="glitch-link">Здесь</a>.',
                 contacts_title: 'Контакты',
                 contacts_p1: 'Если Вас заинтересовало что-то из этого, то жду Вас.',
                 contacts_p2: 'Связаться со мной можно по почте: <strong>tomura.maddog@gmail.com</strong> или <strong>barkin.bad@mail.ru</strong>',
-                contacts_p3: 'Или в социальных сетях (ссылки можно добавить сюда).'
+                contacts_p3: 'Или в социальных сетях: <a href="https://vk.ru/wildbark" target="_blank" rel="noopener" class="social-link">ВК</a>, <a href="https://www.tumblr.com/barkbarkin?source=share" target="_blank" rel="noopener" class="social-link">Тамблер</a>, <a href="https://t.me/barkthedog" target="_blank" rel="noopener" class="social-link">Телеграм</a>'
             },
             eng: {
                 nav_about: 'About me',
@@ -37,11 +37,11 @@ const translations = {
                 dream_title: 'My little dream',
                 dream_quote: '"I will definitely manage. Probably."',
                 dream_p1: 'I will be honest: I am far from a designer, I am only learning to code and looking for what interests me, but even so, I would like to one day help someone create an ARG or a website for VHS horror, so that someone could search for something or solve a puzzle. I like creating the aesthetic of something mysterious, but without going overboard.',
-                dream_p2: 'And let my first attempt be... Here.',
+                dream_p2: 'And let my first attempt be... <a href="void.html" class="glitch-link">Here</a>.',
                 contacts_title: 'Contacts',
                 contacts_p1: 'If any of this caught your interest, I am waiting for you.',
                 contacts_p2: 'You can reach me by email: <strong>tomura.maddog@gmail.com</strong> or <strong>barkin.bad@mail.ru</strong>',
-                contacts_p3: 'Or on social media (links can be added here).'
+                contacts_p3: 'Or on social media: <a href="https://vk.ru/wildbark" target="_blank" rel="noopener" class="social-link">VK</a>, <a href="https://www.tumblr.com/barkbarkin?source=share" target="_blank" rel="noopener" class="social-link">Tumblr</a>, <a href="https://t.me/barkthedog" target="_blank" rel="noopener" class="social-link">Telegram</a>'
             }
         };
 
