@@ -1,16 +1,207 @@
+const articleData = {
+    ru: {
+        title: 'Искрит серебром',
+        paragraphs: [
+            'Серебро известно человечеству уже более шести тысяч лет. По мнению многих учёных, этот благородный металл мог возникнуть в результате взрывов звёзд определённого типа. В Древнем Египте его считали священным: верили, что он является частицей ушедших богов, поэтому серебро ценилось выше золота.',
+            'В античную эпоху из серебра изготавливали деньги, украшения и орудия труда. Первые серебряные монеты появились около 600 года до нашей эры в Лидии — на территории современной Турции. В Средние века в Европе началась массовая добыча этого драгоценного металла. Согласно статистическим данным, именно тогда серебро стало основным компонентом монетной системы.',
+            'В наши дни серебро широко применяется не только в ювелирном деле, но и в медицине, электронике, автомобильной и авиационной промышленности, а также считается ценным инвестиционным активом.',
+            'Ежегодно больше половины добываемого серебра используется в промышленности, из-за чего спрос на него постоянно растёт. Именно поэтому серебро считается важным инвестиционным ресурсом. Оно почти в 85 раз дешевле золота, что во многом объясняет его широкую популярность. Ещё со времён Римской империи серебряные монеты чеканили для внутреннего обращения, а золотые — для международной торговли.',
+            'Серебро занимает заметное место в мифологии разных стран. В Древней Греции этот металл олицетворял богиню Луны Артемиду. В европейском фольклоре победить вампиров и оборотней можно было только с помощью серебряного клинка. В восточной мифологии серебро считается одним из главных символов энергии Инь, женского начала всего сущего.',
+            'В природе серебро встречается в различных формах: в виде самородков, минералов, а также в составе разных руд. Самородное серебро находят крайне редко, но при этом его самородки бывают гораздо крупнее золотых: самый большой в мире был обнаружен в XIX веке в Колумбии и весил 120 тонн. В самородном серебре могут содержаться примеси золота, ртути, меди и многих других металлов.'
+        ],
+        ghosts: [
+            'мы были здесь',
+            'как давно вы смотрели на звёзды?',
+            'помогите',
+            'тут холодно'
+        ]
+    },
+    eng: {
+        title: 'Gleams with silver',
+        paragraphs: [
+            'Silver has been known to humanity for over six thousand years. According to many scientists, this noble metal may have been born from the explosions of certain types of stars. In Ancient Egypt it was considered sacred: people believed it was a particle of the departed gods, which is why silver was valued above gold.',
+            'In antiquity, silver was used to make money, jewellery and tools. The first silver coins appeared around 600 BCE in Lydia, on the territory of modern-day Turkey. In the Middle Ages, mass mining of this precious metal began in Europe. According to statistics, it was then that silver became the main component of the coinage system.',
+            'Today silver is widely used not only in jewellery, but also in medicine, electronics, the automotive and aviation industries, and is also considered a valuable investment asset.',
+            'Every year more than half of all mined silver is used in industry, which is why demand for it keeps growing. That is why silver is considered an important investment resource. It is almost 85 times cheaper than gold, which largely explains its wide popularity. Since the times of the Roman Empire, silver coins were minted for domestic circulation, and gold ones for international trade.',
+            'Silver holds a notable place in the mythology of many countries. In Ancient Greece this metal personified the Moon goddess Artemis. In European folklore, vampires and werewolves could only be defeated with a silver blade. In Eastern mythology, silver is considered one of the main symbols of Yin energy, the feminine principle of all things.',
+            'In nature, silver is found in various forms: as nuggets, minerals, and as part of different ores. Native silver is extremely rare, yet its nuggets can be far larger than gold ones: the largest in the world was discovered in the 19th century in Colombia and weighed 120 tonnes. Native silver may contain impurities of gold, mercury, copper and many other metals.'
+        ],
+        ghosts: [
+            'we were here',
+            'how long since you looked at the stars?',
+            'help',
+            'it is cold here'
+        ]
+    }
+};
+
 const voidCursor = document.getElementById('voidCursor');
+const voidTitle = document.getElementById('voidTitle');
+const soundBtn = document.getElementById('soundBtn');
 
-let cursorVisible = false;
+let currentLang = 'ru';
+let typingToken = 0;
+
+function sleep(ms) {
+    return new Promise(r => setTimeout(r, ms));
+}
+
+function randomChar(lang) {
+    const sets = {
+        ru: 'абвгдежзийклмнопрстуфхцчшщъыьэюя',
+        eng: 'abcdefghijklmnopqrstuvwxyz'
+    };
+    const s = sets[lang] || sets.ru;
+    return s[Math.floor(Math.random() * s.length)];
+}
+
+function getParagraphs() {
+    return document.querySelectorAll('.void-p');
+}
+
+function setupParagraphs() {
+    const data = articleData[currentLang];
+    getParagraphs().forEach(p => {
+        const idx = parseInt(p.dataset.index, 10);
+        const text = data.paragraphs[idx] || '';
+        p.dataset.text = text;
+        p.dataset.typed = 'false';
+        p.textContent = '';
+        p.style.minHeight = '0';
+        p.classList.remove('typing', 'possessed');
+
+        p.textContent = text;
+        void p.offsetHeight;
+        const h = p.offsetHeight;
+        p.style.minHeight = h + 'px';
+        p.textContent = '';
+    });
+}
+
+async function typeParagraph(p, text, ghosts, token) {
+    p.classList.add('typing');
+    let i = 0;
+
+    while (i < text.length) {
+        if (token !== typingToken) { p.classList.remove('typing'); return; }
+
+        if (i > 30 && i < text.length - 20 && Math.random() < 0.005) {
+            const ghost = ghosts[Math.floor(Math.random() * ghosts.length)];
+            p.classList.add('possessed');
+            await sleep(500);
+            if (token !== typingToken) { p.classList.remove('typing', 'possessed'); return; }
+
+            for (const ch of ghost) {
+                if (token !== typingToken) { p.classList.remove('typing', 'possessed'); return; }
+                p.textContent += ch;
+                await sleep(55 + Math.random() * 35);
+            }
+            await sleep(1200);
+            if (token !== typingToken) { p.classList.remove('typing', 'possessed'); return; }
+
+            for (let k = 0; k < ghost.length; k++) {
+                if (token !== typingToken) { p.classList.remove('typing', 'possessed'); return; }
+                p.textContent = p.textContent.slice(0, -1);
+                await sleep(22);
+            }
+            await sleep(450);
+            p.classList.remove('possessed');
+        }
+
+        if (i > 5 && Math.random() < 0.01) {
+            const wrong = randomChar(currentLang);
+            p.textContent += wrong;
+            await sleep(350);
+            if (token !== typingToken) { p.classList.remove('typing'); return; }
+            p.textContent = p.textContent.slice(0, -1);
+            await sleep(200);
+            if (token !== typingToken) { p.classList.remove('typing'); return; }
+        }
+
+        p.textContent += text[i];
+        i++;
+        await sleep(12 + Math.random() * 16);
+    }
+
+    p.classList.remove('typing');
+}
+
+function checkVisibleParagraphs() {
+    const data = articleData[currentLang];
+    const ghosts = data.ghosts;
+    const h = window.innerHeight;
+
+    getParagraphs().forEach(p => {
+        if (p.dataset.typed === 'true') return;
+        const r = p.getBoundingClientRect();
+        if (r.top < h * 0.92 && r.bottom > -60) {
+            p.dataset.typed = 'true';
+            typeParagraph(p, p.dataset.text, ghosts, typingToken);
+        }
+    });
+}
+
+function resetAndRestart() {
+    typingToken++;
+    const data = articleData[currentLang];
+    voidTitle.textContent = data.title;
+
+    getParagraphs().forEach(p => {
+        p.classList.remove('typing', 'possessed');
+        p.textContent = '';
+        p.dataset.typed = 'false';
+    });
+
+    setupParagraphs();
+    checkVisibleParagraphs();
+}
+
+function setLang(lang) {
+    if (!articleData[lang]) return;
+    currentLang = lang;
+    document.documentElement.lang = lang === 'ru' ? 'ru' : 'en';
+
+    document.querySelectorAll('.lang-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.lang === lang);
+    });
+
+    resetAndRestart();
+
+    try { localStorage.setItem('voidLang', lang); } catch (e) {}
+}
+
+document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', () => setLang(btn.dataset.lang));
+});
+
+let initialLang = 'ru';
+try { initialLang = localStorage.getItem('voidLang') || 'ru'; } catch (e) { initialLang = 'ru'; }
+currentLang = initialLang;
+document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === initialLang);
+});
+
+window.addEventListener('load', () => {
+    document.documentElement.lang = currentLang === 'ru' ? 'ru' : 'en';
+    voidTitle.textContent = articleData[currentLang].title;
+    setupParagraphs();
+    checkVisibleParagraphs();
+});
+
+window.addEventListener('scroll', checkVisibleParagraphs, { passive: true });
+window.addEventListener('resize', checkVisibleParagraphs);
+
 let sleepTimer = null;
-const SLEEP_AFTER = 5000;
 
-function wakeCursor() {
+function resetSleep() {
     voidCursor.classList.remove('sleeping');
     clearTimeout(sleepTimer);
     sleepTimer = setTimeout(() => {
         voidCursor.classList.add('sleeping');
-    }, SLEEP_AFTER);
+    }, 5000);
 }
+
+let cursorVisible = false;
 
 window.addEventListener('mousemove', (e) => {
     voidCursor.style.transform =
@@ -19,189 +210,93 @@ window.addEventListener('mousemove', (e) => {
         cursorVisible = true;
         voidCursor.classList.add('visible');
     }
-    wakeCursor();
+    resetSleep();
 });
 
 document.addEventListener('mouseleave', () => {
     cursorVisible = false;
     voidCursor.classList.remove('visible');
-    clearTimeout(sleepTimer);
 });
 
 document.addEventListener('mouseover', (e) => {
     if (e.target.closest('a, button')) voidCursor.classList.add('hover');
 });
-
 document.addEventListener('mouseout', (e) => {
     if (e.target.closest('a, button')) voidCursor.classList.remove('hover');
 });
 
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
-
-const INTRUSIONS = [
-    'мы были здесь',
-    'как давно вы смотрели на звёзды?',
-    'помогите',
-    'тут холодно',
-    'не читай дальше',
-    'он всё ещё здесь',
-    'выход там же, где вход'
-];
-
-const TYPO_CHARS = 'абвгдежзиклмнопрстуфхцчшщыьэюя';
-
-const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
-
-async function typeParagraph(p) {
-    const text = p.dataset.text || '';
-
-    p.innerHTML = '<span class="main-text"></span>';
-    const mainText = p.querySelector('.main-text');
-    p.classList.add('typing');
-
-    let intruded = false;
-
-    for (let i = 0; i < text.length; i++) {
-        const ch = text[i];
-
-        if (!intruded && ch !== ' ' && Math.random() < 0.0022) {
-            intruded = true;
-
-            const phrase = pick(INTRUSIONS);
-            const span = document.createElement('span');
-            span.className = 'intrusion';
-            p.appendChild(span);
-
-            for (const c of phrase) {
-                span.textContent += c;
-                await sleep(70 + Math.random() * 90);
-            }
-
-            await sleep(1200 + Math.random() * 600);
-
-            for (let k = phrase.length; k > 0; k--) {
-                span.textContent = span.textContent.slice(0, -1);
-                await sleep(22 + Math.random() * 30);
-            }
-
-            span.remove();
-            await sleep(300 + Math.random() * 350);
-        }
-
-        if (ch !== ' ' && Math.random() < 0.006) {
-            const wrong = pick(TYPO_CHARS);
-            mainText.textContent += wrong;
-            await sleep(90 + Math.random() * 90);
-            await sleep(180 + Math.random() * 220);
-            mainText.textContent = mainText.textContent.slice(0, -1);
-            await sleep(70 + Math.random() * 60);
-        }
-
-        mainText.textContent += ch;
-        await sleep(14 + Math.random() * 22);
-    }
-
-    p.classList.remove('typing');
-    p.classList.add('done');
-}
-
-const paragraphs = document.querySelectorAll('.void-article p');
-
-paragraphs.forEach((p) => {
-    p.style.minHeight = p.offsetHeight + 'px';
-    p.dataset.text = p.textContent;
-    p.textContent = '';
-});
-
-const observer = new IntersectionObserver(
-    (entries) => {
-        entries.forEach((entry) => {
-            if (entry.isIntersecting && !entry.target.dataset.typed) {
-                entry.target.dataset.typed = 'true';
-                observer.unobserve(entry.target);
-                typeParagraph(entry.target);
-            }
-        });
-    },
-    { threshold: 0.15 }
-);
-
-paragraphs.forEach((p) => observer.observe(p));
-
 let audioCtx = null;
 let masterGain = null;
-let soundOn = false;
+let soundOn = true;
 
-function setupAudio() {
-    if (audioCtx) return;
-
+function buildDrone() {
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
     masterGain = audioCtx.createGain();
-    masterGain.gain.value = 0;
+    masterGain.gain.value = soundOn ? 1 : 0;
     masterGain.connect(audioCtx.destination);
 
-    const drone1 = audioCtx.createOscillator();
-    drone1.type = 'sine';
-    drone1.frequency.value = 55;
+    const osc1 = audioCtx.createOscillator();
+    osc1.type = 'sine';
+    osc1.frequency.value = 55;
     const g1 = audioCtx.createGain();
-    g1.gain.value = 0.05;
-    drone1.connect(g1);
-    g1.connect(masterGain);
-    drone1.start();
+    g1.gain.value = 0.06;
+    osc1.connect(g1).connect(masterGain);
+    osc1.start();
 
-    const drone2 = audioCtx.createOscillator();
-    drone2.type = 'sine';
-    drone2.frequency.value = 55.7;
+    const osc2 = audioCtx.createOscillator();
+    osc2.type = 'sine';
+    osc2.frequency.value = 82.4;
     const g2 = audioCtx.createGain();
-    g2.gain.value = 0.045;
-    drone2.connect(g2);
-    g2.connect(masterGain);
-    drone2.start();
+    g2.gain.value = 0.025;
+    osc2.connect(g2).connect(masterGain);
+    osc2.start();
 
-    const drone3 = audioCtx.createOscillator();
-    drone3.type = 'triangle';
-    drone3.frequency.value = 110;
+    const osc3 = audioCtx.createOscillator();
+    osc3.type = 'triangle';
+    osc3.frequency.value = 38;
     const g3 = audioCtx.createGain();
-    g3.gain.value = 0.012;
-    drone3.connect(g3);
-    g3.connect(masterGain);
-    drone3.start();
+    g3.gain.value = 0.035;
+    osc3.connect(g3).connect(masterGain);
+    osc3.start();
 
-    const bufSize = audioCtx.sampleRate * 2;
-    const buffer = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate);
+    const bufferSize = audioCtx.sampleRate * 2;
+    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
     const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
-
+    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
     const noise = audioCtx.createBufferSource();
     noise.buffer = buffer;
     noise.loop = true;
 
-    const hp = audioCtx.createBiquadFilter();
-    hp.type = 'highpass';
-    hp.frequency.value = 3500;
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 180;
 
-    const nGain = audioCtx.createGain();
-    nGain.gain.value = 0.012;
+    const ng = audioCtx.createGain();
+    ng.gain.value = 0.04;
 
-    noise.connect(hp);
-    hp.connect(nGain);
-    nGain.connect(masterGain);
+    noise.connect(filter).connect(ng).connect(masterGain);
     noise.start();
 }
 
-const soundBtn = document.getElementById('soundBtn');
+function tryStartAudio() {
+    if (!audioCtx) {
+        try { buildDrone(); } catch (e) { return; }
+    }
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume().catch(() => {});
+    }
+}
 
-soundBtn.addEventListener('click', () => {
-    setupAudio();
+['click', 'mousemove', 'keydown', 'touchstart'].forEach(evt => {
+    document.addEventListener(evt, tryStartAudio);
+});
 
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-
+soundBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
     soundOn = !soundOn;
-    const target = soundOn ? 0.5 : 0;
-
-    masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
-    masterGain.gain.linearRampToValueAtTime(target, audioCtx.currentTime + 1.0);
-
-    soundBtn.classList.toggle('on', soundOn);
+    if (!audioCtx) tryStartAudio();
+    if (masterGain && audioCtx) {
+        masterGain.gain.setTargetAtTime(soundOn ? 1 : 0, audioCtx.currentTime, 0.15);
+    }
+    soundBtn.classList.toggle('muted', !soundOn);
 });
