@@ -95,8 +95,8 @@ body {
 .void-cursor.sleeping {
     width: 6px;
     height: 6px;
-    opacity: 0.25;
-    filter: drop-shadow(0 0 2px rgba(184, 29, 35, 0.3));
+    opacity: 0.22;
+    filter: drop-shadow(0 0 2px rgba(184, 29, 35, 0.25));
 }
 
 @media (hover: none), (pointer: coarse) {
@@ -155,23 +155,29 @@ body {
 .ghost-line {
     font-family: 'Catherine', serif;
     font-style: italic;
-    color: #F2E6D8;
+    color: #8a3038;
     font-size: 19px;
     line-height: 1.6;
-    letter-spacing: 1.5px;
-    margin: 6px 0 22px;
-    padding-left: 4px;
-    opacity: 0.92;
-    text-shadow: 0 0 8px rgba(255, 255, 255, 0.35),
-                 0 0 22px rgba(184, 29, 35, 0.55);
-    animation: ghostFlicker 1.8s ease-in-out infinite;
+    letter-spacing: 0.5px;
+    margin: 4px 0 20px;
+    padding-left: 2px;
+    opacity: 0.75;
+    animation: ghostFlicker 2.4s ease-in-out infinite;
+}
+
+.ghost-line.loud {
+    font-style: normal;
+    letter-spacing: 2px;
+    color: #B81D23;
+    opacity: 0.9;
+    animation: ghostFlicker 1.2s ease-in-out infinite;
 }
 
 @keyframes ghostFlicker {
-    0%, 100% { opacity: 0.92; }
-    35% { opacity: 0.55; }
-    50% { opacity: 0.95; }
-    72% { opacity: 0.4; }
+    0%, 100% { opacity: 0.75; }
+    40% { opacity: 0.45; }
+    55% { opacity: 0.8; }
+    75% { opacity: 0.35; }
 }
 
 @keyframes voidPulse {
