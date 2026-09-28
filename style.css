@@ -350,6 +350,69 @@
             max-width: 800px;
         }
 
+        .social-link {
+            display: inline-block;
+            color: #B81D23;
+            text-decoration: none;
+            padding: 1px 5px;
+            border-bottom: 1px dashed #B81D23;
+            transition: color 0.25s ease, background 0.25s ease,
+                        border-color 0.25s ease, box-shadow 0.25s ease,
+                        text-shadow 0.25s ease, transform 0.25s ease;
+        }
+
+        .social-link:hover {
+            color: #FFFFFF;
+            background-color: rgba(184, 29, 35, 0.28);
+            border-bottom-color: #FFFFFF;
+            text-shadow: 0 0 8px rgba(184, 29, 35, 0.95), 0 0 16px rgba(184, 29, 35, 0.6);
+            box-shadow: 0 0 10px rgba(184, 29, 35, 0.65), 0 0 22px rgba(184, 29, 35, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .glitch-link {
+            position: relative;
+            display: inline-block;
+            color: #B81D23;
+            text-decoration: none;
+            padding: 0 3px;
+            font-style: italic;
+            transition: color 0.25s ease, text-shadow 0.25s ease;
+            animation: glitchText 3.4s infinite;
+        }
+
+        .glitch-link:hover {
+            color: #FFFFFF;
+            animation-duration: 0.7s;
+        }
+
+        @keyframes glitchText {
+            0%, 82%, 100% {
+                text-shadow: none;
+                transform: translate(0, 0) skewX(0deg);
+            }
+            83% {
+                text-shadow: -2px 0 #00E5FF, 2px 0 #B81D23;
+                transform: translate(1px, -1px) skewX(2deg);
+            }
+            85% {
+                text-shadow: 2px 0 #00E5FF, -2px 0 #B81D23;
+                transform: translate(-2px, 1px) skewX(-3deg);
+            }
+            87% {
+                text-shadow: -1px 1px #00E5FF, 1px -1px #B81D23;
+                transform: translate(1px, 0) skewX(1deg);
+            }
+            89% {
+                text-shadow: 2px -1px #00E5FF, -2px 1px #B81D23;
+                transform: translate(-1px, -1px) skewX(-2deg);
+            }
+            91% {
+                text-shadow: none;
+                transform: translate(0, 0) skewX(0deg);
+            }
+        }
+
         @media (max-width: 900px) {
             html, body {
                 height: auto;
